@@ -20,7 +20,7 @@ final class UserController
     ) {}
 
     #[Route(path: '/users', name: 'app_api_users', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('SENIOR_MEMBER')]
     public function list(): JsonResponse
     {
         $users = $this->repository->findAll();
