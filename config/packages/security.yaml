@@ -20,12 +20,8 @@ security:
         web:
             pattern: ^/
             provider: default
-            form_login:
-                check_path: app_login
-                login_path: app_login
-                username_parameter: username
-                password_parameter: password
-                default_target_path: app_profile
+            custom_authenticator:
+                - App\Security\FormAuthenticator
             logout:
                 path: app_logout
 
