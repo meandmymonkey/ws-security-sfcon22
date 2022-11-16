@@ -6,6 +6,7 @@ namespace App\Security;
 
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\StrictValidAt;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,6 +40,7 @@ final class JwtAuthenticator extends AbstractAuthenticator
         $parser = $this->configuration->parser();
         $validator = $this->configuration->validator();
 
+        /** @var UnencryptedToken $jwt */
         $jwt = $parser->parse($tokenValue);
 
         $constraints = [
