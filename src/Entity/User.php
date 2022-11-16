@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as EmailTwoFactorInterface;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
@@ -84,5 +85,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->getUsername();
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        // TODO: Implement isEmailAuthEnabled() method.
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        // TODO: Implement getEmailAuthRecipient() method.
+    }
+
+    public function getEmailAuthCode(): ?string
+    {
+        // TODO: Implement getEmailAuthCode() method.
+    }
+
+    public function setEmailAuthCode(string $authCode): void
+    {
+        // TODO: Implement setEmailAuthCode() method.
     }
 }
