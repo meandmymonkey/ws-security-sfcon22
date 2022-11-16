@@ -22,6 +22,7 @@ security:
         web:
             pattern: ^/
             provider: default
+            user_checker: App\Security\AccountLockedChecker
             custom_authenticator:
                 - App\Security\FormAuthenticator
             two_factor:

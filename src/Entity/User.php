@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Security\Lockable;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface, GoogleTwoFactorInterface, BackupCodeInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface, GoogleTwoFactorInterface, BackupCodeInterface, Lockable
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
@@ -48,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     #[ORM\Column(type: 'simple_array', nullable: true)]
     #[Serializer\Ignore]
     private array $backupCodes = [];
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $accountLocked = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -168,5 +172,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     public function updateBackupCodes(array $codes): void
     {
         $this->backupCodes = $codes;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->accountLocked;
     }
 }
