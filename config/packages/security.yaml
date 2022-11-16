@@ -16,7 +16,8 @@ security:
         api:
             pattern: ^/api
             stateless: true
-            security: false
+            custom_authenticator:
+                - App\Security\JsonAuthenticator
         web:
             pattern: ^/
             provider: default
