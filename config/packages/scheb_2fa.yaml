@@ -12,3 +12,5 @@ scheb_two_factor:
     google:
         enabled: true
         template: security/2fa.html.twig
+    backup_codes:
+        enabled: true
