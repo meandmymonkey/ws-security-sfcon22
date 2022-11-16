@@ -10,6 +10,7 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
@@ -37,7 +38,7 @@ final class GoogleAuthenticatorExtension extends AbstractExtension
         $user = $this->security->getUser();
 
         $qrCode = Builder::create()
-            ->writer(new PngWriter())
+            ->writer(new SvgWriter())
             ->writerOptions([])
             ->data($this->googleAuthenticator->getQRContent($user))
             ->encoding(new Encoding('UTF-8'))
