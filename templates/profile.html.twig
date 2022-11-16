@@ -7,12 +7,10 @@
         <p>This is your profile. <a href="{{ path('app_logout') }}">Logout here</a>.</p>
         <p>Registered at {{ user.createdAt|date('d/m/Y') }}</p>
 
-        {#
         <section>
             <h2>2FA - Email</h2>
             <p>Email authentication codes will be sent to <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
         </section>
-        #}
 
         {#
         <section>

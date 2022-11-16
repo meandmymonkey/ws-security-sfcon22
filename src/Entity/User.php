@@ -31,9 +31,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     #[ORM\Column(type: 'string')]
     private string $email;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string')]
     #[Serializer\Ignore]
     private string $password;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Serializer\Ignore]
+    private ?string $emailAuthCode = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -89,21 +93,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
 
     public function isEmailAuthEnabled(): bool
     {
-        // TODO: Implement isEmailAuthEnabled() method.
+        return true;
     }
 
     public function getEmailAuthRecipient(): string
     {
-        // TODO: Implement getEmailAuthRecipient() method.
+        return $this->getEmail();
     }
 
     public function getEmailAuthCode(): ?string
     {
-        // TODO: Implement getEmailAuthCode() method.
+        return $this->emailAuthCode;
     }
 
     public function setEmailAuthCode(string $authCode): void
     {
-        // TODO: Implement setEmailAuthCode() method.
+        $this->emailAuthCode = $authCode;
     }
 }
