@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="content-box">
+        <h1>Hello, {{ user.displayName }}!</h1>
+        <p>This is your profile. <a href="{{ path('app_logout') }}">Logout here</a>.</p>
+        <p>Registered at {{ user.createdAt|date('d/m/Y') }}</p>
+
+        {#
+        <section>
+            <h2>2FA - Email</h2>
+            <p>Email authentication codes will be sent to <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+        </section>
+        #}
+
+        {#
+        <section>
+            <h2>2FA - Google Authenticator</h2>
+            {% if app.flashes('2fa_reset_google_authenticator')|length > 0 %}
+                <p>Please scan this code to connect your Google Authenticator App.</p>
+                <p><span class="warning">This code will only be visible once.</span></p>
+                <p>
+                    <img class="qr-code" alt="Google Authenticator Code" src="{{ google_auth_qr_code() }}"></p>
+            {% else %}
+                <p>
+                    <a href="{{ path('app_reset_google_authenticator') }}">Connect</a> a
+                    Google Authenticator App. This will invalidate your current one, if registered.</p>
+            {% endif %}
+        </section>
+        #}
+
+        {#
+        <section>
+            <h2>2FA - Backup Codes</h2>
+            {% if app.flashes('2fa_reset_backup_codes')|length > 0 %}
+                <p>These are codes you can use as backup. Store these in a secure place.</p>
+                <p><span class="warning">These codes will only be visible once.</span></p>
+                <ul class="backup-codes">
+                    {% for code in user.backupCodes %}
+                        <li>{{ code }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p><a href="{{ path('app_reset_backupcodes') }}">Generate</a> a new list with Backup
+                    Codes. This will invalidate your existing list of codes.</p>
+            {% endif %}
+        </section>
+        #}
+
+        <p class="login-copy">&copy; 2022 QOSSMIC GmbH</p>
+    </div>
+
+{% endblock %}

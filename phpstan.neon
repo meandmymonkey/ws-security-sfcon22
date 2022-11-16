@@ -1,0 +1,22 @@
+parameters:
+    level: 7
+    tmpDir: var/phpstan
+    scanDirectories:
+        - var/cache/dev/Symfony/Config
+    paths:
+        - src
+    excludePaths:
+        - */templates/*
+        - */skeleton/*
+        - */plugins/**/test/*
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    ignoreErrors:
+        - '#no value type specified in iterable type array#'
+    checkGenericClassInNonGenericObjectType: false
+
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-doctrine/rules.neon
