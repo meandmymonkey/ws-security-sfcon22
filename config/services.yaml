@@ -23,6 +23,28 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    Lcobucci\JWT\Signer\Key\InMemory.private:
+        class: Lcobucci\JWT\Signer\Key\InMemory
+        factory: [ 'Lcobucci\JWT\Signer\Key\InMemory', 'file' ]
+        arguments: [ '%kernel.project_dir%/config/jwt/private.pem' ]
+
+    Lcobucci\JWT\Signer\Key\InMemory.public:
+        class: Lcobucci\JWT\Signer\Key\InMemory
+        factory: [ 'Lcobucci\JWT\Signer\Key\InMemory', 'file' ]
+        arguments: [ '%kernel.project_dir%/config/jwt/public.pem' ]
+
+    Lcobucci\JWT\Signer:
+        class: 'Lcobucci\JWT\Signer\Rsa\Sha256'
+
+    Lcobucci\JWT\Configuration:
+        class: Lcobucci\JWT\Configuration
+        #factory: ['Lcobucci\JWT\Configuration', 'forAsymmetricSigner']
+        factory: [ 'Lcobucci\JWT\Configuration', 'forUnsecuredSigner' ]
+        #arguments:
+        #    - '@Lcobucci\JWT\Signer'
+        #    - '@Lcobucci\JWT\Signer\Key\InMemory.private'
+        #    - '@Lcobucci\JWT\Signer\Key\InMemory.public'
+
     RandomLib\Factory: ~
 
     backup_code_random_generator:
