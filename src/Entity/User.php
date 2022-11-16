@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as EmailTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface, GoogleTwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
@@ -38,6 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     #[ORM\Column(type: 'string', nullable: true)]
     #[Serializer\Ignore]
     private ?string $emailAuthCode = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Serializer\Ignore]
+    private ?string $googleAuthenticatorSecret = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -109,5 +114,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     public function setEmailAuthCode(string $authCode): void
     {
         $this->emailAuthCode = $authCode;
+    }
+
+    public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return null !== $this->getGoogleAuthenticatorSecret();
+    }
+
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return $this->getEmail();
+    }
+
+    public function getGoogleAuthenticatorSecret(): ?string
+    {
+        return $this->googleAuthenticatorSecret;
+    }
+
+    public function setGoogleAuthenticatorSecret(string $secret): void
+    {
+        $this->googleAuthenticatorSecret = $secret;
     }
 }
