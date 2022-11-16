@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as EmailTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -17,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface, GoogleTwoFactorInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTwoFactorInterface, GoogleTwoFactorInterface, BackupCodeInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
@@ -43,6 +44,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     #[ORM\Column(type: 'string', nullable: true)]
     #[Serializer\Ignore]
     private ?string $googleAuthenticatorSecret = null;
+
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    #[Serializer\Ignore]
+    private array $backupCodes = [];
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -96,11 +101,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
         return $this->getUsername();
     }
 
+    #[Serializer\Ignore]
     public function isEmailAuthEnabled(): bool
     {
         return true;
     }
 
+    #[Serializer\Ignore]
     public function getEmailAuthRecipient(): string
     {
         return $this->getEmail();
@@ -116,11 +123,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
         $this->emailAuthCode = $authCode;
     }
 
+    #[Serializer\Ignore]
     public function isGoogleAuthenticatorEnabled(): bool
     {
         return null !== $this->getGoogleAuthenticatorSecret();
     }
 
+    #[Serializer\Ignore]
     public function getGoogleAuthenticatorUsername(): string
     {
         return $this->getEmail();
@@ -134,5 +143,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EmailTw
     public function setGoogleAuthenticatorSecret(string $secret): void
     {
         $this->googleAuthenticatorSecret = $secret;
+    }
+
+    #[Serializer\Ignore]
+    public function getBackupCodes(): array
+    {
+        return $this->backupCodes;
+    }
+
+    #[Serializer\Ignore]
+    public function isBackupCode(string $code): bool
+    {
+        return in_array($code, $this->backupCodes);
+    }
+
+    public function invalidateBackupCode(string $code): void
+    {
+        $this->backupCodes = array_filter(
+            $this->backupCodes,
+            fn (string $value) => $value !== $code
+        );
+    }
+
+    public function updateBackupCodes(array $codes): void
+    {
+        $this->backupCodes = $codes;
     }
 }
