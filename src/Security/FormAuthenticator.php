@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 final class FormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -30,6 +31,8 @@ final class FormAuthenticator extends AbstractLoginFormAuthenticator
         $username = (string) $request->request->get('username', '');
         $password = (string) $request->request->get('password', '');
         $csrfToken = (string) $request->request->get('_csrf_token', '');
+
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $username);
 
         return new Passport(
             new UserBadge($username),
